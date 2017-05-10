@@ -96,14 +96,14 @@ function acceptTrade(session) {
   session.set('tradeInProgress', false);
   const message = 'Trade accepted, adding to smart contract and forwarding to back office';
   sendDefaultMessage(session, message);
-  const traderAddress = session.get('tradingWith');
+  const traderAddress = session.get('tradeStartedBy');
   sendDefaultDMMessage(traderAddress, message);
 }
 
 function rejectTrade(session) {
   session.set('tradeInProgress', false);  
   sendDefaultMessage(session, `Trade rejected`);
-  const traderAddress = session.get('tradingWith');
+  const traderAddress = session.get('tradeStartedBy');
   sendDefaultDMMessage(traderAddress, 'Trade rejected');
 }
 
@@ -114,7 +114,7 @@ function processTradeParameters(session, message) {
   if(parameters.length == 4) {
     getUserAddress(parameters[0], function(userAddress) {
       console.log('USER ADDRESS FOUND', userAddress);
-      session.set('tradingWith', userAddress);
+      session.set('tradeStartedBy', session.address);
       sendRequestTradeConfirmation(userAddress, `${parameters[0]} requested a trade of${parameters[2]} units of${parameters[1]} for${parameters[3]} dollars. Please accept or reject.`, session)
     });
   }
